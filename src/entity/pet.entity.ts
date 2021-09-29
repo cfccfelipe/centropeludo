@@ -1,18 +1,14 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-} from "typeorm";
+import { Entity, Column, CreateDateColumn } from "typeorm";
 
 import { Field, ObjectType } from "type-graphql";
+import { ObjectIdColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
 export class Pet {
   @Field()
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @ObjectIdColumn()
+  _id!: number;
 
   @Field(() => String)
   @Column()
@@ -30,7 +26,7 @@ export class Pet {
   @Column()
   customer_id!: number;
 
-  @Field(() => String)
-  @CreateDateColumn({ type: "timestamp" })
-  createdAt!: string;
+  @Field()
+  @CreateDateColumn()
+  createdAt!: number;
 }

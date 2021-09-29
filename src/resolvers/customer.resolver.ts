@@ -1,53 +1,15 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Customer } from "../entity/customer.entity";
-import { createConnection } from "typeorm";
 import {
-  getRepository,
-  Repository,
   getMongoRepository,
   MongoRepository,
-  ObjectIdColumn,
-  PrimaryColumn,
+  FindAndModifyWriteOpResultObject,
 } from "typeorm";
-import { createTracing } from "trace_events";
-import { O_SYMLINK } from "constants";
-
-//Crear en otro archivo
-@InputType()
-class CustomerInputID {
-  @Field(() => Number)
-  _id!: number;
-}
-
-@InputType()
-class CustomerInput {
-  @Field(() => Number)
-  _id!: number;
-
-  @Field()
-  first_name!: string;
-
-  @Field()
-  last_name!: string;
-
-  @Field(() => Number)
-  number?: number;
-
-  @Field()
-  email?: string;
-}
-
-@InputType()
-class CustomerUpdateInput {
-  @Field(() => Number)
-  _id!: number;
-
-  @Field(() => Number)
-  number?: number;
-
-  @Field()
-  email?: string;
-}
+import {
+  CustomerInput,
+  CustomerInputID,
+  CustomerUpdateInput,
+} from "../input/customer.input";
 
 @Resolver()
 export class CustomerResolver {
@@ -97,19 +59,25 @@ export class CustomerResolver {
   @Mutation(() => Customer)
   async updateOneCustomerById(
     @Arg("input", () => CustomerUpdateInput) input: CustomerUpdateInput
-  ): Promise<Customer | undefined> {
+  ): Promise<FindAndModifyWriteOpResultObject | undefined> {
     const customerValidator = await this.customerRepository.findOne({
       _id: input._id,
     });
     if (!customerValidator) {
       throw new Error("El cliente no esta creado");
     }
-    // const updatedCustomer = await this.customerRepository.updateOne(input, {
-    return await this.customerRepository.save({
-      _id: input._id,
-      number: input.number,
-      email: input.email,
+    return await this.customerRepository.findOneAndUpdate(customerValidator, {
+      $set: {
+        email: input.email,
+        number: input.number,
+      },
     });
-    // return await this.customerRepository.findOne(updatedCustomer._id);
+  }
+  @Mutation(() => Boolean)
+  async deleteOneCustomerById(
+    @Arg("input", () => CustomerInputID) input: CustomerInputID
+  ): Promise<Boolean> {
+    await this.customerRepository.deleteOne({ _id: input._id });
+    return true;
   }
 }
