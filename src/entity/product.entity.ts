@@ -1,22 +1,22 @@
-import { Entity, Column, CreateDateColumn, ObjectIdColumn } from "typeorm";
-import { Field, ObjectType } from "type-graphql";
+import { Entity, Column, CreateDateColumn, ObjectIdColumn } from 'typeorm';
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 @Entity()
 export class Product {
-  @Field()
-  @ObjectIdColumn()
-  _id!: number;
+	@Field(() => Number)
+	@ObjectIdColumn()
+	_id!: number;
 
-  @Field(() => String)
-  @Column()
-  name!: string;
+	@Field(() => String)
+	@Column()
+	name!: string;
 
-  @Field()
-  @Column()
-  price!: number;
+	@Field(() => Number)
+	@Column()
+	price!: number;
 
-  @Field()
-  @CreateDateColumn()
-  createdAt!: number;
+	@Field(() => Number)
+	@CreateDateColumn()
+	createdAt!: number;
 }

@@ -1,37 +1,40 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class CustomerInputID {
-  @Field(() => Number)
-  _id!: number;
+	@Field(() => Number)
+	_id!: number;
 }
 
 @InputType()
 export class CustomerInput {
-  @Field(() => Number)
-  _id!: number;
+	@Field(() => Number)
+	_id!: number;
 
-  @Field()
-  first_name!: string;
+	@Field(() => String)
+	first_name!: string;
 
-  @Field()
-  last_name!: string;
+	@Field(() => String)
+	last_name!: string;
 
-  @Field(() => Number)
-  number?: number;
+	@Field({ nullable: true })
+	phone?: number;
 
-  @Field()
-  email?: string;
+	@Field({ nullable: true })
+	email?: string;
+
+	@Field({ nullable: true })
+	pets?: number;
 }
 
 @InputType()
 export class CustomerUpdateInput {
-  @Field(() => Number)
-  _id!: number;
+	@Field(() => Number)
+	_id!: number;
 
-  @Field(() => Number)
-  number?: number;
+	@Field(() => Number, { nullable: true })
+	number?: number;
 
-  @Field()
-  email?: string;
+	@Field(() => String, { nullable: true })
+	email?: string;
 }
